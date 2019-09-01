@@ -1,0 +1,7 @@
+https://course.fast.ai/start_colab.html#step-1-accessing-colab
+https://colab.research.google.com/github/fastai/course-v3/blob/master/nbs/dl1/lesson1-pets.ipynb#scrollTo=28pttHv8sOIz
+https://docs.fast.ai/
+https://github.com/fastai/course-v3
+https://www.fast.ai/
+https://course.fast.ai/videos/?lesson=1
+
