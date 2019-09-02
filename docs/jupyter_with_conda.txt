@@ -1,0 +1,4 @@
+this is to add a virtual env within jupyter
+
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+
