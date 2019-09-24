@@ -15,18 +15,12 @@ np.random.seed(2)
 pat = r'/([^/]+)_\d+.jpg$'
 
 data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(), size=50, bs=bs
-                                  ).normalize(imagenet_stats)
+                                   ).normalize(imagenet_stats)
 
-print(data.classes)
-len(data.classes),data.c
-
+np.random.seed(2)
 learn = cnn_learner(data, models.resnet34, metrics=error_rate)
-learn.fit_one_cycle(1)
 
-print("End of fitting")
-learn.save('stage-1')
-exit()
-
+learn.load('stage-1');
 
 
 # ## Results
@@ -41,6 +35,8 @@ exit()
 interp = ClassificationInterpretation.from_learner(learn)
 
 losses,idxs = interp.top_losses()
+
+exit()
 
 len(data.valid_ds)==len(losses)==len(idxs)
 
