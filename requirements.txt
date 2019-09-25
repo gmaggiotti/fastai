@@ -1,0 +1,5 @@
+libsixel-python
+torch
+torchvision
+fastai
+

@@ -1,10 +1,10 @@
 from fastai.vision import *
 from fastai.metrics import error_rate
 
-bs = 64
+batch_size = 64
 path = untar_data(URLs.PETS); path
 
-path_anno = path/'annotations'
+path_annotations = path / 'annotations'
 path_img = path/'images'
 
 fnames = get_image_files(path_img)
@@ -14,143 +14,29 @@ fnames[:5]
 np.random.seed(2)
 pat = r'/([^/]+)_\d+.jpg$'
 
-data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(), size=50, bs=bs
+data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(), size=50, bs=batch_size
                                    ).normalize(imagenet_stats)
 
 np.random.seed(2)
 learn = cnn_learner(data, models.resnet34, metrics=error_rate)
 
+print("loading model.")
 learn.load('stage-1');
 
+# print("finding LR")
+# learn.lr_find()
 
-# ## Results
-
-# Let's see what results we have got. 
-# 
-# We will first see which were the categories that the model most confused with one another. We will try to see if what the model predicted was reasonable or not. In this case the mistakes look reasonable (none of the mistakes seems obviously naive). This is an indicator that our classifier is working correctly. 
-# 
-# Furthermore, when we plot the confusion matrix, we can see that the distribution is heavily skewed: the model makes the same mistakes over and over again but it rarely confuses other categories. This suggests that it just finds it difficult to distinguish some specific categories between each other; this is normal behaviour.
-
+# print("ploting LR")
+# learn.recorder.plot()
+# learn.fit_one_cycle(1, max_lr=slice(1e-6,1e-4))
 
 interp = ClassificationInterpretation.from_learner(learn)
-
-losses,idxs = interp.top_losses()
-
+most_c= interp.most_confused(min_val=5)
+for (wrong, good, diff ) in most_c:
+    print(wrong,",",good,",",diff)
 exit()
 
-len(data.valid_ds)==len(losses)==len(idxs)
 
-
-
-interp.plot_top_losses(9, figsize=(15,11))
-
-
-# In[ ]:
-
-
-doc(interp.plot_top_losses)
-
-
-# In[ ]:
-
-
-interp.plot_confusion_matrix(figsize=(12,12), dpi=60)
-
-
-# In[ ]:
-
-
-interp.most_confused(min_val=2)
-
-
-# ## Unfreezing, fine-tuning, and learning rates
-
-# Since our model is working as we expect it to, we will *unfreeze* our model and train some more.
-
-# unfreeze do not use by default transfer learning.  Allows us to train the model from the scratch
-
-
-learn.unfreeze()
-
-
-# In[ ]:
-
-
-learn.fit_one_cycle(1)
-
-
-# In[ ]:
-
-
-learn.load('stage-1');
-
-
-# In[ ]:
-
-
-learn.lr_find()
-
-
-# In[ ]:
-
-
-learn.recorder.plot()
-
-
-# In[ ]:
-
-
-learn.unfreeze()
-learn.fit_one_cycle(2, max_lr=slice(1e-6,1e-4))
-
-
-# That's a pretty accurate model!
-
-# ## Training: resnet50
-
-# Now we will train in the same way as before but with one caveat: instead of using resnet34 as our backbone we will use resnet50 (resnet34 is a 34 layer residual network while resnet50 has 50 layers. It will be explained later in the course and you can learn the details in the [resnet paper](https://arxiv.org/pdf/1512.03385.pdf)).
-# 
-# Basically, resnet50 usually performs better because it is a deeper network with more parameters. Let's see if we can achieve a higher performance here. To help it along, let's us use larger images too, since that way the network can see more detail. We reduce the batch size a bit since otherwise this larger network will require more GPU memory.
-
-# In[ ]:
-
-
-data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(),
-                                   size=299, bs=bs//2).normalize(imagenet_stats)
-
-
-# In[ ]:
-
-
-learn = cnn_learner(data, models.resnet50, metrics=error_rate)
-
-
-# In[ ]:
-
-
-learn.lr_find()
-learn.recorder.plot()
-
-
-# In[ ]:
-
-
-learn.fit_one_cycle(8)
-
-
-# In[ ]:
-
-
-learn.save('stage-1-50')
-
-
-# It's astonishing that it's possible to recognize pet breeds so accurately! Let's see if full fine-tuning helps:
-
-# In[ ]:
-
-
-learn.unfreeze()
-learn.fit_one_cycle(3, max_lr=slice(1e-6,1e-4))
 
 
 # If it doesn't, you can always go back to your previous model.

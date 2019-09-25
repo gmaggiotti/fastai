@@ -1,10 +1,10 @@
 from fastai.vision import *
 from fastai.metrics import error_rate
 
-bs = 64
+batch_size = 64
 path = untar_data(URLs.PETS); path
 
-path_anno = path/'annotations'
+path_annotations = path / 'annotations'
 path_img = path/'images'
 
 fnames = get_image_files(path_img)
@@ -14,7 +14,7 @@ fnames[:5]
 np.random.seed(2)
 pat = r'/([^/]+)_\d+.jpg$'
 
-data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(), size=50, bs=bs
+data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(), size=50, bs=batch_size
                                   ).normalize(imagenet_stats)
 
 print(data.classes)
@@ -120,7 +120,7 @@ learn.fit_one_cycle(2, max_lr=slice(1e-6,1e-4))
 
 
 data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(),
-                                   size=299, bs=bs//2).normalize(imagenet_stats)
+                                   size=299, bs=batch_size // 2).normalize(imagenet_stats)
 
 
 # In[ ]:
