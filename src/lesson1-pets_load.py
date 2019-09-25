@@ -25,7 +25,7 @@ learn.load('stage-1');
 
 # print("finding LR")
 # learn.lr_find()
-
+#
 # print("ploting LR")
 # learn.recorder.plot()
 # learn.fit_one_cycle(1, max_lr=slice(1e-6,1e-4))
