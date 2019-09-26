@@ -14,6 +14,7 @@ valid_idx = range(int(len(df)*0.9), len(df))
 
 label = 'response'
 cat_names = [cat for cat in df.columns][:-1]
+emb_szs = { cat:15 for cat in cat_names}
 
 data = TabularDataBunch.from_df(path, df, label, valid_idx=valid_idx, procs=procs, cat_names=cat_names)
 print(data.train_ds.cont_names)
@@ -23,7 +24,7 @@ for o in (cat_x, cont_x, y):
     print(to_np(o[:5]))
 
 f1_score =FBeta(average='macro',beta = 1) #partial(fbeta, thresh=0.2, beta = 1)
-learn = tabular_learner(data, layers=[200,100], emb_szs={'r_platform': 10}, metrics=[accuracy,f1_score])
+learn = tabular_learner(data, layers=[200,100], emb_szs=emb_szs, metrics=[accuracy,f1_score])
 learn.fit_one_cycle(1)
 
 
