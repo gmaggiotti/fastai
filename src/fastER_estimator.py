@@ -1,10 +1,31 @@
 from fastai.tabular import *
-from fastai.metrics import error_rate
+from fastai.metrics import *
 
 path = Path('../datasets')
-(path/"").ls()
+file = path/"dataset-er.csv"
 
-df = pd.read_csv(path/'20190919-to-20190921.csv')
-df = df.drop(columns="sid")
-df = df.drop(columns="time")
+df = pd.read_csv(file)
+df = df.drop(columns=["sid","time","r_site_iab_cats","g_event_id"])
 df.head()
+
+procs = [FillMissing, Categorify, Normalize]
+valid_idx = range(int(len(df)*0.9), len(df))
+
+
+label = 'response'
+cat_names = [cat for cat in df.columns][:-1]
+
+data = TabularDataBunch.from_df(path, df, label, valid_idx=valid_idx, procs=procs, cat_names=cat_names)
+print(data.train_ds.cont_names)
+
+(cat_x,cont_x),y = next(iter(data.train_dl))
+for o in (cat_x, cont_x, y):
+    print(to_np(o[:5]))
+
+f1_score =FBeta(average='macro',beta = 1) #partial(fbeta, thresh=0.2, beta = 1)
+learn = tabular_learner(data, layers=[200,100], emb_szs={'r_platform': 10}, metrics=[accuracy,f1_score])
+learn.fit_one_cycle(1)
+
+
+
+
