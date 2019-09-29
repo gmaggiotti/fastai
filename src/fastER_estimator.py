@@ -2,7 +2,7 @@ from fastai.tabular import *
 from fastai.metrics import *
 
 path = Path('../datasets')
-file = path/"dataset-er.csv"
+file = path/"dataset-er_balanced.csv"
 
 df = pd.read_csv(file)
 df = df.drop(columns=["sid","time","r_site_iab_cats","g_event_id"])
@@ -25,8 +25,12 @@ for o in (cat_x, cont_x, y):
 
 f1_score =FBeta(average='macro',beta = 1) #partial(fbeta, thresh=0.2, beta = 1)
 learn = tabular_learner(data, layers=[200,100], emb_szs=emb_szs, metrics=[accuracy,f1_score])
-learn.fit_one_cycle(1)
+learn.fit_one_cycle(6)
 
+result = learn.predict(df.iloc[50])
+print(result)
+result = learn.predict(df.iloc[150])
+print(result)
 
 
 
