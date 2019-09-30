@@ -77,31 +77,16 @@ interp.most_confused(min_val=2)
 learn.unfreeze()
 
 
-# In[ ]:
 
 
 learn.fit_one_cycle(1)
 
-
-# In[ ]:
-
-
 learn.load('stage-1');
 
 
-# In[ ]:
-
 
 learn.lr_find()
-
-
-# In[ ]:
-
-
 learn.recorder.plot()
-
-
-# In[ ]:
 
 
 learn.unfreeze()
@@ -116,129 +101,66 @@ learn.fit_one_cycle(2, max_lr=slice(1e-6,1e-4))
 # 
 # Basically, resnet50 usually performs better because it is a deeper network with more parameters. Let's see if we can achieve a higher performance here. To help it along, let's us use larger images too, since that way the network can see more detail. We reduce the batch size a bit since otherwise this larger network will require more GPU memory.
 
-# In[ ]:
-
 
 data = ImageDataBunch.from_name_re(path_img, fnames, pat, ds_tfms=get_transforms(),
                                    size=299, bs=batch_size // 2).normalize(imagenet_stats)
 
-
-# In[ ]:
-
-
 learn = cnn_learner(data, models.resnet50, metrics=error_rate)
 
-
-# In[ ]:
 
 
 learn.lr_find()
 learn.recorder.plot()
 
-
-# In[ ]:
-
-
 learn.fit_one_cycle(8)
-
-
-# In[ ]:
 
 
 learn.save('stage-1-50')
 
 
 # It's astonishing that it's possible to recognize pet breeds so accurately! Let's see if full fine-tuning helps:
-
-# In[ ]:
-
-
 learn.unfreeze()
 learn.fit_one_cycle(3, max_lr=slice(1e-6,1e-4))
 
 
 # If it doesn't, you can always go back to your previous model.
-
-# In[ ]:
-
-
 learn.load('stage-1-50');
 
-
-# In[ ]:
-
-
 interp = ClassificationInterpretation.from_learner(learn)
-
-
-# In[ ]:
-
-
 interp.most_confused(min_val=2)
 
 
 # ## Other data formats
-
-# In[ ]:
-
-
 path = untar_data(URLs.MNIST_SAMPLE); path
-
-
-# In[ ]:
-
 
 tfms = get_transforms(do_flip=False)
 data = ImageDataBunch.from_folder(path, ds_tfms=tfms, size=26)
 
 
-# In[ ]:
-
-
 data.show_batch(rows=3, figsize=(5,5))
-
-
-# In[ ]:
 
 
 learn = cnn_learner(data, models.resnet18, metrics=accuracy)
 learn.fit(2)
 
 
-# In[ ]:
-
-
 df = pd.read_csv(path/'labels.csv')
 df.head()
 
 
-# In[ ]:
-
-
 data = ImageDataBunch.from_csv(path, ds_tfms=tfms, size=28)
-
-
-# In[ ]:
-
 
 data.show_batch(rows=3, figsize=(5,5))
 data.classes
 
 
-# In[ ]:
 
 
 data = ImageDataBunch.from_df(path, df, ds_tfms=tfms, size=24)
 data.classes
 
 
-# In[ ]:
-
-
 fn_paths = [path/name for name in df['name']]; fn_paths[:2]
-
-
-# In[ ]:
 
 
 pat = r"/(\d)/\d+\.png$"
@@ -246,30 +168,17 @@ data = ImageDataBunch.from_name_re(path, fn_paths, pat=pat, ds_tfms=tfms, size=2
 data.classes
 
 
-# In[ ]:
-
-
 data = ImageDataBunch.from_name_func(path, fn_paths, ds_tfms=tfms, size=24,
         label_func = lambda x: '3' if '/3/' in str(x) else '7')
 data.classes
-
-
-# In[ ]:
 
 
 labels = [('3' if '/3/' in str(x) else '7') for x in fn_paths]
 labels[:5]
 
 
-# In[ ]:
-
-
 data = ImageDataBunch.from_lists(path, fn_paths, labels=labels, ds_tfms=tfms, size=24)
 data.classes
-
-
-# In[ ]:
-
 
 
 
