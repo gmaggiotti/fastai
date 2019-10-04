@@ -41,6 +41,10 @@ print(result)
 result = learn.predict(test.iloc[150])
 print(result)
 
+predictions, *_ = learn.get_preds(DatasetType.Test)
+labels = np.argmax(predictions, 1)
+packed_result = zip(predictions.numpy()[:,1],labels)
+
 res = []
 for i in range(0,len(train)):
     pred = learn.predict(train.iloc[i])

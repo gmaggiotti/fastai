@@ -2,7 +2,7 @@ from fastai.tabular import *
 from fastai.metrics import *
 
 path = Path('../datasets')
-file = path/"dataset-er_balanced.csv"
+file = path/"dataset-er.csv"
 
 df = pd.read_csv(file)
 df = df.drop(columns=["sid","time","r_site_iab_cats","g_event_id"])
