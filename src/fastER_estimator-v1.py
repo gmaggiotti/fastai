@@ -48,18 +48,24 @@ predictions, *_ = learn.get_preds(DatasetType.Test)
 labels = test['response']
 submission = pd.DataFrame({'prediction' :predictions[:,1] ,'label': labels})
 
+print(len(predictions),len(labels))
 recall = submission[ submission['label'] == 1 ].mean()['prediction']
+precision = submission[ submission['label'] == 1 ].sum()['prediction']/ submission.sum()['prediction']
 
-print("recall: ", recall)
+fscore = 2 * precision * recall /(precision + recall)
 
-res = []
-for i in range(0,len(train)):
-    pred = learn.predict(train.iloc[i])
-    cat = pred[1].numpy()
-    val = pred[2].numpy()[1]
-    res.append((cat,val))
+print("recall",recall)
+print("precision",precision)
+print("fscore",fscore)
 
-print("a")
 
-arr = pd.DataFrame(res)
-arr[arr[1] >= 0.1]
+thresh = 0.08
+pos= submission[submission['label'] == 1]
+true_p = pos[pos['prediction'] >= thresh]
+print(len(true_p),len(pos))
+print("Sensitivity: ",len(true_p)/len(pos))
+
+neg= submission[submission['label'] == 0]
+true_n = neg[neg['prediction'] < thresh]
+print(len(true_n),len(neg))
+print("Specificity: ",len(true_n)/len(neg))
