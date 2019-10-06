@@ -41,9 +41,16 @@ print(result)
 result = learn.predict(test.iloc[150])
 print(result)
 
+#
+# Calculate Recall and Precison and Fscore metrics from the test set
+#
 predictions, *_ = learn.get_preds(DatasetType.Test)
-labels = np.argmax(predictions, 1)
-packed_result = zip(predictions.numpy()[:,1],labels)
+labels = test['response']
+submission = pd.DataFrame({'prediction' :predictions[:,1] ,'label': labels})
+
+recall = submission[ submission['label'] == 1 ].mean()['prediction']
+
+print("recall: ", recall)
 
 res = []
 for i in range(0,len(train)):
