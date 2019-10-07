@@ -57,6 +57,7 @@ fscore = 2 * precision * recall /(precision + recall)
 print("recall",recall)
 print("precision",precision)
 print("fscore",fscore)
+FloatList
 
 
 thresh = 0.08
