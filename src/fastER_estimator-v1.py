@@ -42,7 +42,7 @@ result = learn.predict(test.iloc[150])
 print(result)
 
 #
-# Calculate Recall and Precison and Fscore metrics from the test set
+# Calculate Recal, Precison and Fscore metrics from the test set
 #
 predictions, *_ = learn.get_preds(DatasetType.Test)
 labels = test['response']
@@ -57,8 +57,6 @@ fscore = 2 * precision * recall /(precision + recall)
 print("recall",recall)
 print("precision",precision)
 print("fscore",fscore)
-FloatList
-
 
 thresh = 0.08
 pos= submission[submission['label'] == 1]
