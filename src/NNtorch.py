@@ -5,7 +5,7 @@ import numpy as np
 def sigmoid(x, deriv=False):
     if (deriv == True):
         return x * (1 - x)
-    return 1 / (1 + np.exp(-x))
+    return 1 / (1 + torch.exp(-x))
 
 
 # input data, each column represent a dif neuron
@@ -46,8 +46,8 @@ for j in range(60000):
 def predict(X1):
     max = X1.view(X1.shape).max()
     l0 = 2 * X1 / float(max) - 1
-    l1 = sigmoid(np.dot(l0, w0))
-    return l1[0]  # since process X1[0] output would be l2[0]
+    l1 = sigmoid(l0.float() @ w0)
+    return l1.numpy()[0]
 
 
 test_dataset = torch.tensor([1, 9, 19, 33, 16, 2, 1])
