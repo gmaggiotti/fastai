@@ -24,5 +24,5 @@ lr = 1e-1
 for t in range(1000): update()
 
 plt.scatter(x[:,0],y)
-plt.scatter(x[:,0],x**2@a);
+plt.scatter(x[:,0],(x**2@a).detach().numpy());
 plt.show()
