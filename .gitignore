@@ -2,3 +2,5 @@
 .idea/
 fastai.iml
 datasets/planet/
+datasets/train*
+datasets/2019091*
