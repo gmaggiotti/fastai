@@ -17,12 +17,7 @@ y = ds[:, -1:]
 max = X.view(X.shape).max()
 X = 2 * X / float(max) - 1
 
-np.random.seed(1)  # The seed for the random generator is set so that it will return the same random numbers each time,
-# which is sometimes useful for debugging.
-
-# Now we intialize the weights to random values. w0 is the weight between the input layer and the hidden layer.
-
-# synapses
+torch.manual_seed(7)
 w0 = 2 * torch.rand(X.shape[1], 1, dtype=torch.float) - 1  # mxn matrix of weights
 
 # This is the main training loop. The output shows the evolution of the error between the model and desired. The
