@@ -44,5 +44,8 @@ print(len(params))
 
 # nn.Conv2d will take in a 4D Tensor of nSamples x nChannels x Height x Width.
 input = torch.randn(1, 1, 32, 32)
-output = net(input)
-print(output)
+out = net(input)
+print(out)
+
+net.zero_grad()
+out.backward(torch.randn(1, 10))
