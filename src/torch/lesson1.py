@@ -45,3 +45,9 @@ print(c_numpy, c[0, :])
 # convert form numpy to torch tensor
 d_numpy = np.array([1,2])
 d = torch.from_numpy(d_numpy)
+
+# matrix and tensor mul
+m1 = torch.tensor([[2,2],[2,2]])
+m2 = torch.tensor([[2],[2]])
+
+print(m1@m2)
