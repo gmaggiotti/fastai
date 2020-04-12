@@ -47,7 +47,13 @@ d_numpy = np.array([1,2])
 d = torch.from_numpy(d_numpy)
 
 # matrix and tensor mul
-m1 = torch.tensor([[2,2],[2,2]])
-m2 = torch.tensor([[2],[2]])
+m1 = torch.tensor([[1,1],[2,2]])
+m2 = torch.tensor([[1],[0]])
 
 print(m1@m2)
+
+# map a list integers of into a list of tensors
+arr = [1,2,3]
+a = [tensor for tensor in map(torch.tensor, arr)]
+b = list(map(torch.tensor,arr))
+assert a == b

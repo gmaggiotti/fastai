@@ -4,3 +4,4 @@ fastai.iml
 datasets/planet/
 datasets/train*
 datasets/2019091*
+datasets/mnist*
