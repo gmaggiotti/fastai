@@ -18,9 +18,6 @@ train_ds = TensorDataset(x_train, y_train)
 valid_ds = TensorDataset(x_valid, y_valid)
 data = DataBunch.create(train_ds, valid_ds, bs=bs)
 
-x, y = next(iter(data.train_dl))
-print(x.shape, y.shape)
-
 
 class Mnist_Logistic(nn.Module):
     def __init__(self):
