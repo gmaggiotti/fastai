@@ -38,7 +38,8 @@ def update(x,y,lr):
     opt.zero_grad()
     return loss.item()
 
+
 model = Mnist_NN()
-losses = [update(x,y,lr) for x,y in data.train_dl]
+losses = [update(x, y, lr) for x, y in data.train_dl]
 plt.plot(losses);
 plt.show()
