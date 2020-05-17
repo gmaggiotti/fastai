@@ -13,11 +13,11 @@ class TestCalculator(TestCase):
     def setUp(self):
         self.calc = TestCalc()
 
-    def test_sum(self, sum):
+    def test_sum(self):
         answer = self.calc.sum(2, 4)
-        self.assertEqual(answer(2,3), 6)
+        self.assertEqual(answer, 6)
 
-class TestCalculator(TestCase):
+class TestCalculator1(TestCase):
     @patch('TestCalculator.Calculator.sum', return_value=9)
 
     def test_sum1(self, sum):
