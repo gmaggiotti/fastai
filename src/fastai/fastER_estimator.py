@@ -1,7 +1,7 @@
 from fastai.tabular import *
 from fastai.metrics import *
 
-path = Path('../datasets')
+path = Path('datasets/')
 file = path/"dataset-er.csv"
 
 df = pd.read_csv(file)
