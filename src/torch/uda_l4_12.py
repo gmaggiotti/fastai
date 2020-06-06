@@ -9,9 +9,13 @@ transform = transforms.Compose([transforms.ToTensor(),
                                 transforms.Normalize((0.5,), (0.5,)),
                                 ])
 # Download and load the training data
-trainset = datasets.MNIST('~/.pytorch/MNIST_data/', download=True, train=True, transform=transform)
+trainset = datasets.FashionMNIST('datasets/F_MNIST_data/', download=True, train=True, transform=transform)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
 
+import matplotlib.pyplot as plt
+img = next(iter(trainloader))[0]
+plt.imshow(img[0][0], cmap="Blues")
+plt.show()
 
 class NNetwork(nn.Module):
     def __init__(self):
