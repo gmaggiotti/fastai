@@ -25,9 +25,18 @@ class NNetwork(nn.Module):
         x = self.output(x)
         return self.softmax(x)
 
+# or using Sequential
+from collections import OrderedDict
+model1 = nn.Sequential(OrderedDict([
+    ('hidden', nn.Linear(784, 256)),
+    ('sigmoid', nn.Sigmoid()),
+    ('output', nn.Linear(256, 10)),
+    ('softmax', nn.Softmax(dim=1))]))
 
 model = NNetwork()
 for img in iter(trainloader):
     image = img[0].view(img[0].shape[0], -1)
     ps = model.forward(image)
-    print(ps)
+    print(ps.sum(dim=1))
+
+
