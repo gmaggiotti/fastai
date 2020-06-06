@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 from torchvision import datasets, transforms
+from torch import optim
+import numpy as np
 
 # Define a transform to normalize the data
 transform = transforms.Compose([transforms.ToTensor(),
@@ -17,7 +19,7 @@ class NNetwork(nn.Module):
         self.hidden = nn.Linear(784, 256)
         self.sigmoid = nn.Sigmoid()
         self.output = nn.Linear(256, 10)
-        self.softmax = nn.Softmax(dim=1)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
         x = self.hidden(x)
@@ -25,18 +27,39 @@ class NNetwork(nn.Module):
         x = self.output(x)
         return self.softmax(x)
 
+
 # or using Sequential
 from collections import OrderedDict
+
 model1 = nn.Sequential(OrderedDict([
     ('hidden', nn.Linear(784, 256)),
     ('sigmoid', nn.Sigmoid()),
     ('output', nn.Linear(256, 10)),
     ('softmax', nn.Softmax(dim=1))]))
 
+# Defining the loss
+criterion = nn.CrossEntropyLoss()
+
 model = NNetwork()
-for img in iter(trainloader):
-    image = img[0].view(img[0].shape[0], -1)
-    ps = model.forward(image)
-    print(ps.sum(dim=1))
+# Optimizers require the parameters to optimize and a learning rate
+optimizer = optim.SGD(model.parameters(), lr=0.01)
 
+epochs = 5
+for i in range(epochs):
+    running_loss = 0
+    for img, label in iter(trainloader):
+        # Clear the gradients, do this because gradients are accumulated
+        optimizer.zero_grad()
 
+        image = img.view(img.shape[0], -1)
+        output = model.forward(image)
+        loss = criterion(output, label)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    else:
+        print(f"Training loss: {running_loss/len(trainloader)}")
+
+test_img = next(iter(trainloader))
+result = model.forward(test_img[0].view(test_img[0].shape[0], -1))
+print(torch.argmax(result[0]), test_img[1][0])
