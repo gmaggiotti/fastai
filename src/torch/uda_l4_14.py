@@ -38,7 +38,7 @@ model = NNetwork()
 # Optimizers require the parameters to optimize and a learning rate
 optimizer = optim.Adam(model.parameters(), lr=0.002)
 
-epochs = 10
+epochs = 4
 train_losses, test_losses = [], []
 for i in range(epochs):
     running_loss = 0
@@ -77,3 +77,6 @@ plt.plot(train_losses, label='Training loss')
 plt.plot(test_losses, label='Validation loss')
 plt.legend(frameon=False)
 plt.show()
+
+print("The state dict keys: \n\n", model.state_dict().keys())
+torch.save(model.state_dict(), 'models/uda_l4_14.pth')
