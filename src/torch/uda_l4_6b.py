@@ -48,7 +48,6 @@ epochs = 2
 for i in range(epochs):
     running_loss = 0
     for img, label in iter(trainloader):
-
         image = img.view(img.shape[0], -1)
         output = model.forward(image)
         # Calculate loss

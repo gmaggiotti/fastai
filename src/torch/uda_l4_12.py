@@ -1,8 +1,5 @@
-import torch
-from torch import nn
+from torch import torch, nn, optim
 from torchvision import datasets, transforms
-from torch import optim
-import numpy as np
 
 # Define a transform to normalize the data
 transform = transforms.Compose([transforms.ToTensor(),
@@ -37,12 +34,12 @@ from collections import OrderedDict
 
 model1 = nn.Sequential(OrderedDict([
     ('hidden', nn.Linear(784, 256)),
-    ('sigmoid', nn.Sigmoid()),
+    ('relu', nn.ReLU()),
     ('output', nn.Linear(256, 10)),
     ('softmax', nn.Softmax(dim=1))]))
 
 # Defining the loss
-criterion = nn.CrossEntropyLoss()
+criterion = nn.NLLLoss()
 
 model = NNetwork()
 # Optimizers require the parameters to optimize and a learning rate
@@ -52,18 +49,14 @@ epochs = 2
 for i in range(epochs):
     running_loss = 0
     for img, label in iter(trainloader):
-
-        image = img.view(img.shape[0], -1)
-        output = model.forward(image)
-        # Calculate loss
+        img = img.view(img.shape[0], -1)
+        output = model(img)
         loss = criterion(output, label)
 
-        # Clear the gradients, do this because gradients are accumulated
         optimizer.zero_grad()
-        # backward pass to calculate the new gradients
         loss.backward()
-        # update the weights
         optimizer.step()
+
         running_loss += loss.item()
     else:
         print(f"Training loss: {running_loss/len(trainloader)}")
