@@ -1,6 +1,6 @@
 from torch import torch
 from torchvision import datasets, transforms
-from src.torch.models.fc_model import NNetwork
+from src.torch.torch_models.fc_model import NNetwork
 
 # Define a transform to normalize the data
 transform = transforms.Compose([transforms.ToTensor(),

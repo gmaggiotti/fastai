@@ -8,3 +8,4 @@ datasets/mnist*
 datasets/MNIST_data*
 datasets/F_MNIST_data*
 models/
+__pycache__/
