@@ -1,7 +1,7 @@
 from torch import torch, nn, optim
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
-from  src.torch.torch_models.fc_model import NNetwork
+from src.torch.torch_models.fc_model import NNetwork
 
 # Define a transform to normalize the data
 transform = transforms.Compose([transforms.ToTensor(),
@@ -42,20 +42,19 @@ for i in range(epochs):
             model.eval()
             for images, labels in testloader:
                 test_output = model(images)
-                test_loss += criterion(test_output,labels)
+                test_loss += criterion(test_output, labels)
 
                 ps = torch.exp(test_output)
                 top_p, top_class = ps.topk(1, dim=1)
                 equals = top_class == labels.view(*top_class.shape)
                 accuracy += torch.mean(equals.type(torch.FloatTensor))
         model.train()
-    train_losses.append(running_loss/len(trainloader))
-    test_losses.append(test_loss/len(testloader))
-    print("Epoch: {}/{}.. ".format(i+1, epochs),
-          "Training Loss: {:.3f}.. ".format(running_loss/len(trainloader)),
-          "Test Loss: {:.3f}.. ".format(test_loss/len(testloader)),
-          "Test Accuracy: {:.3f}".format(accuracy/len(testloader)))
-
+    train_losses.append(running_loss / len(trainloader))
+    test_losses.append(test_loss / len(testloader))
+    print("Epoch: {}/{}.. ".format(i + 1, epochs),
+          "Training Loss: {:.3f}.. ".format(running_loss / len(trainloader)),
+          "Test Loss: {:.3f}.. ".format(test_loss / len(testloader)),
+          "Test Accuracy: {:.3f}".format(accuracy / len(testloader)))
 
 plt.plot(train_losses, label='Training loss')
 plt.plot(test_losses, label='Validation loss')
