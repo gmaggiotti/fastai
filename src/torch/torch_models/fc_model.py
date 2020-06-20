@@ -1,9 +1,9 @@
 from torch import nn
 
 class NNetwork(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.hidden = nn.Linear(784, 256)
+    def __init__(self, input_size=784):
+        super().__init__( )
+        self.hidden = nn.Linear(input_size, 256)
         self.sigmoid = nn.Sigmoid()
         self.output = nn.Linear(256, 10)
         self.softmax = nn.LogSoftmax(dim=1)
