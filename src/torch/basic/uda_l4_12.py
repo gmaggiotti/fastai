@@ -14,17 +14,23 @@ img = next(iter(trainloader))[0]
 plt.imshow(img[0][0], cmap="Blues")
 plt.show()
 
+neurons = 512
+
 class NNetwork(nn.Module):
     def __init__(self):
         super().__init__()
-        self.hidden = nn.Linear(784, 256)
-        self.sigmoid = nn.Sigmoid()
-        self.output = nn.Linear(256, 10)
+        self.hidden1 = nn.Linear(784, neurons)
+        self.hidden2 = nn.Linear(neurons, neurons)
+        self.activation = nn.ReLU()
+        self.output = nn.Linear(neurons, 10)
         self.softmax = nn.LogSoftmax(dim=1)
+        self.dropout = nn.Dropout(p=0.2)
 
     def forward(self, x):
-        x = self.hidden(x)
-        x = self.sigmoid(x)
+        x = self.hidden1(x)
+        x = self.dropout(self.activation(x))
+        self.hidden2(x)
+        x = self.dropout(self.activation(x))
         x = self.output(x)
         return self.softmax(x)
 
@@ -32,11 +38,11 @@ class NNetwork(nn.Module):
 # or using Sequential
 from collections import OrderedDict
 
-model1 = nn.Sequential(OrderedDict([
-    ('hidden', nn.Linear(784, 256)),
-    ('relu', nn.ReLU()),
-    ('output', nn.Linear(256, 10)),
-    ('softmax', nn.Softmax(dim=1))]))
+# model1 = nn.Sequential(OrderedDict([
+#     ('hidden', nn.Linear(784, 256)),
+#     ('relu', nn.ReLU()),
+#     ('output', nn.Linear(256, 10)),
+#     ('softmax', nn.Softmax(dim=1))]))
 
 # Defining the loss
 criterion = nn.NLLLoss()

@@ -3,6 +3,11 @@ from torchvision import datasets, transforms, models
 from src.torch.torch_models.fc_model import NNetwork
 import matplotlib.pyplot as plt
 
+
+def freeze_model(model):
+    for param in model.parameters():
+        param.requires_grad = False
+
 # Define a transform to normalize the data
 train_transform = transforms.Compose([transforms.Resize(255),
                                       transforms.CenterCrop(224),
@@ -21,13 +26,14 @@ test_transform = transforms.Compose([transforms.Resize(255),
                                                           [0.229, 0.224, 0.225])
                              ])
 
+# initilize a pretrained sensenet121 model
 model = models.densenet121(pretrained=True)
 
-
 # Freeze parameters so we don't backprop through them
-for param in model.parameters():
-    param.requires_grad = False
+freeze_model(model)
 
+# add a classifier model as last layers
+# take in consideratio the output len of the sensenet121 which is 1024
 model.classifier = NNetwork(1024)
 
 # Download and load the test data
@@ -40,8 +46,8 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=32, shuffle=True)
 # Defining the loss
 criterion = nn.NLLLoss()
 
-# Optimizers require the parameters to optimize and a learning rate
-optimizer = optim.Adam(model.parameters(), lr=0.002)
+# Optimizers require only the parameters of the classifier to optimize and a learning rate
+optimizer = optim.Adam(model.classifier.parameters(), lr=0.002)
 
 epochs = 5
 train_losses, test_losses = [], []
